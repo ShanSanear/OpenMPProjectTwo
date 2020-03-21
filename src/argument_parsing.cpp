@@ -18,13 +18,14 @@ auto parse_arguments(int argc, char **argv) {
                 .positional_help("[optional args]")
                 .show_positional_help();
         options.add_options()
-                ("n", "Number of divisions for specified calculus", cxxopts::value<int>())
-                ("a", "Coefficient for x^2", cxxopts::value<double>())
-                ("b", "Coefficient for x", cxxopts::value<double>())
-                ("c", "Y-intercept of the parabola", cxxopts::value<double>())
-                ("s,start", "Start of the calculation", cxxopts::value<double>())
-                ("e,end", "End of the calculation", cxxopts::value<double>())
-                ("p,processes", "Number of processes", cxxopts::value<int>()->default_value("4"))
+                ("n", "Number of divisions for specified calculus", cxxopts::value<int>(), "int")
+                ("a", "Coefficient for x^2", cxxopts::value<long double>(), "double")
+                ("b", "Coefficient for x", cxxopts::value<long double>(), "double")
+                ("c", "Y-intercept of the parabola", cxxopts::value<long double>(), "double")
+                ("s,start", "Start of the calculation", cxxopts::value<long double>(), "double, X0")
+                ("e,end", "End of the calculation", cxxopts::value<long double>(), "double, X1")
+                ("p,processes", "Number of processes", cxxopts::value<int>()->default_value("4"), "int")
+                ("m,method", "Methods to be run", cxxopts::value<std::string>()->default_value("both"), "string")
                 ("help", "Print help");
         auto result = options.parse(argc, argv);
         auto arguments = result.arguments();
@@ -43,8 +44,8 @@ auto parse_arguments(int argc, char **argv) {
                 show_help_and_exit(options, 2);
             }
         }
-        double start = result["s"].as<double>();
-        double end = result["e"].as<double>();
+        long double start = result["s"].as<long double>();
+        long double end = result["e"].as<long double>();
         if (start >= end) {
             printf("'s' ('start') must be greater than 'e' ('end')");
             exit(3);

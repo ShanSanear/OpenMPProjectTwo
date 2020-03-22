@@ -1,7 +1,6 @@
 #include <iostream>
 #include <omp.h>
 #include <cmath>
-#include "../include/cxxopts.hpp"
 #include "argument_parsing.cpp"
 
 class IntegralCalculator {
@@ -11,7 +10,7 @@ private:
     long double dx;
     int n;
 
-    long double calculate_formula(long double x) const;
+    [[nodiscard]] long double calculate_formula(long double x) const;
 
 public:
     IntegralCalculator(long double a, long double b, long double c, int n, long double starting_point,
@@ -60,7 +59,7 @@ void IntegralCalculator::calculate_trapezoidal_rule() {
     long double value_for_start = calculate_formula(starting_point);
     long double value_for_end = calculate_formula(ending_point);
     long double average = (value_for_start + value_for_end) / 2;
-#pragma omp parallel for default(none) shared(a, b, c, starting_point, dx, n) private(average) reduction(+:calculated_integral)
+#pragma omp parallel for default(none) shared(a, b, c, starting_point, dx, n) reduction(+:calculated_integral)
     for (int i = 1; i < n; i++) {
         calculated_integral += (calculate_formula(starting_point + (i * dx)));
     }
